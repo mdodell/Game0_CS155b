@@ -125,7 +125,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			scene.add(cone);
 
 
-		// load a sound and set it as the PositionalAudio object's buffer
+		// load a sound and set it as the PositionalAudio object's buffer -- adds Jaws music
 		var audioLoader1 = new THREE.AudioLoader();
 		audioLoader1.load( '/sounds/Jaws-theme-song.mp3', function( buffer ) {
 			sound1.setBuffer( buffer );
@@ -350,7 +350,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 		var mesh = new Physijs.ConeMesh( geometry, pmaterial, 0 );
-		mesh.add( sound1 );
+		mesh.add( sound1 ); //adds Jaws music to cone as you get closer
 		mesh.castShadow = true;
 		return mesh;
 	}
