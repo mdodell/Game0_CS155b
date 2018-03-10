@@ -16,20 +16,27 @@ The user moves a cube around the board trying to knock balls into a cone
 
 	var cone;
 
-
+	var introScene, introCamera, introText;
 	var endScene, endCamera, endText;
 
 
+	// create an AudioListener and add it to the camera
+var listener1 = new THREE.AudioListener();
 
+// create the PositionalAudio object (passing in the listener)
+var sound1 = new THREE.PositionalAudio( listener1 );
 
 
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false,
-				speed:10, fly:false, reset:false,
+				speed:10, fly:false, reset:false, leftCamera:false, rightCamera: false,
 		    camera:camera}
 
 	var gameState =
 	     {score:0, health:10, scene:'main', camera:'none' }
+
+  var startDate = new Date();
+	var elapsedTime;
 
 
 	// Here is the main game control
@@ -39,7 +46,21 @@ The user moves a cube around the board trying to knock balls into a cone
 
 
 
+	function createIntroScene(){
+		introScene = initScene();
+		gameState.scene='intro';
+		introText = createImageMesh('Splash.png');
+		//endText.rotateX(Math.PI);
+		introScene.add(introText);
+		var light1 = createPointLight();
+		light1.position.set(0,0,-1);
+		introScene.add(light1);
+		introCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		introCamera.position.set(0,0,-0.73);
+		introCamera.rotation.y = Math.PI;
+		introCamera.lookAt(0,0,0);
 
+	}
 	function createEndScene(){
 		endScene = initScene();
 		endText = createSkyBox('youwon.png',10);
@@ -59,15 +80,16 @@ The user moves a cube around the board trying to knock balls into a cone
 	*/
 	function init(){
       initPhysijs();
-			scene = initScene();
+			scene = createIntroScene();
 			createEndScene();
 			initRenderer();
-			createMainScene();
 	}
 
 
 	function createMainScene(){
+
       // setup lighting
+			gameState.scene = 'main';
 			var light1 = createPointLight();
 			light1.position.set(0,200,20);
 			scene.add(light1);
@@ -101,6 +123,15 @@ The user moves a cube around the board trying to knock balls into a cone
 			cone = createConeMesh(4,6);
 			cone.position.set(10,3,7);
 			scene.add(cone);
+
+
+		// load a sound and set it as the PositionalAudio object's buffer
+		var audioLoader1 = new THREE.AudioLoader();
+		audioLoader1.load( '/sounds/Jaws-theme-song.mp3', function( buffer ) {
+			sound1.setBuffer( buffer );
+			sound1.setRefDistance( 0.75 );
+			sound1.play();
+		});
 
 
 			//playGameMusic();
@@ -162,6 +193,7 @@ The user moves a cube around the board trying to knock balls into a cone
 			sound.play();
 		});
 	}
+
 
 	function soundEffect(file){
 		// create an AudioListener and add it to the camera
@@ -229,7 +261,18 @@ The user moves a cube around the board trying to knock balls into a cone
 		mesh.castShadow = true;
 		return mesh;
 	}
-
+	function createImageMesh(image){
+		var geometry = new THREE.BoxGeometry( 1, 1, 1);
+		var texture = new THREE.TextureLoader().load( '../images/'+image );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
+		mesh = new Physijs.BoxMesh( geometry, material );
+		//mesh = new Physijs.BoxMesh( geometry, material,0 );
+		mesh.castShadow = true;
+		return mesh;
+	}
 
 
 	function createGround(image){
@@ -287,11 +330,17 @@ The user moves a cube around the board trying to knock balls into a cone
 		avatarCam.position.set(0,4,0);
 		avatarCam.lookAt(0,4,10);
 		mesh.add(avatarCam);
+		avatarCam.add(listener1);
+
+
 
 		return mesh;
 	}
 
 
+
+
+// finally add the sound to the mesh
 	function createConeMesh(r,h){
 		var geometry = new THREE.ConeGeometry( r, h, 32);
 		var texture = new THREE.TextureLoader().load( '../images/tile.jpg' );
@@ -301,9 +350,13 @@ The user moves a cube around the board trying to knock balls into a cone
 		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 		var mesh = new Physijs.ConeMesh( geometry, pmaterial, 0 );
+		mesh.add( sound1 );
 		mesh.castShadow = true;
 		return mesh;
 	}
+
+
+
 
 
 	function createBall(){
@@ -358,10 +411,16 @@ The user moves a cube around the board trying to knock balls into a cone
       case " ": controls.fly = true; break;
       case "h": controls.reset = true; break;
 
+			case "p": scene = initScene(); createMainScene(); break;
+
 
 			// switch cameras
 			case "1": gameState.camera = camera; break;
 			case "2": gameState.camera = avatarCam; break;
+
+			//rotate avatar camera
+			case "q": controls.leftCamera = true; break;
+			case "e": controls.rightCamera = true;break;
 
 			// move the camera around, relative to the avatar
 			case "ArrowLeft": avatarCam.translateY(1);break;
@@ -386,6 +445,10 @@ The user moves a cube around the board trying to knock balls into a cone
 			case "m": controls.speed = 10; break;
       case " ": controls.fly = false; break;
       case "h": controls.reset = false; break;
+
+			//rotate avatar camera
+			case "q": controls.leftCamera = false; break;
+			case "e": controls.rightCamera = false;break;
 		}
 	}
 
@@ -422,6 +485,12 @@ The user moves a cube around the board trying to knock balls into a cone
       avatar.position.set(40,10,40);
     }
 
+		if (controls.leftCamera){
+			avatarCam.rotateY(0.01);
+		} else if(controls.rightCamera){
+			avatarCam.rotateY(-0.01);
+		}
+
 	}
 
 
@@ -431,6 +500,11 @@ The user moves a cube around the board trying to knock balls into a cone
 		requestAnimationFrame( animate );
 
 		switch(gameState.scene) {
+
+			case "intro":
+				endText.rotateY(0.005);
+				renderer.render( introScene, introCamera );
+				break;
 
 			case "youwon":
 				endText.rotateY(0.005);
@@ -443,15 +517,15 @@ The user moves a cube around the board trying to knock balls into a cone
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
 				}
+				var info = document.getElementById("info");
+				elapsedTime = (new Date().getTime() - startDate.getTime()) / 1000;
+			 	info.innerHTML='<div style="font-size:24pt">Score: ' + gameState.score + '&nbsp;&nbsp;Time Taken: ' + parseInt(elapsedTime) + ' seconds&nbsp;&nbsp;&lt;/&gt; with &hearts; by Team 10</div>';
+
 				break;
 
 			default:
 			  console.log("don't know the scene "+gameState.scene);
 
 		}
-
-		//draw heads up display ..
-	  var info = document.getElementById("info");
-		info.innerHTML='<div style="font-size:24pt">Score: ' + gameState.score + '</div>';
 
 	}
