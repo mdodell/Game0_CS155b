@@ -40,7 +40,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 
 
 	// Here is the main game control
-  init(); //
+	init(); //
 	initControls();
 	animate();  // start the animation loop!
 
@@ -110,11 +110,14 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			scene.add(skybox);
 
 			// create the avatar
+			createAvatar();
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			avatar = createAvatar();
-			avatar.translateY(20);
+			avatarCam.position.set(0,4,0);
+			avatarCam.lookAt(0,4,10);
+			avatarCam.add(listener1);
 			avatarCam.translateY(-4);
 			avatarCam.translateZ(3);
+			
 			scene.add(avatar);
 			gameState.camera = avatarCam;
 
@@ -318,23 +321,31 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 	}
 
 	function createAvatar(){
-		//var geometry = new THREE.SphereGeometry( 4, 20, 20);
-		var geometry = new THREE.BoxGeometry( 5, 5, 6);
-		var material = new THREE.MeshLambertMaterial( { color: 0xffff00} );
-		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
-		//var mesh = new THREE.Mesh( geometry, material );
-		var mesh = new Physijs.BoxMesh( geometry, pmaterial );
-		mesh.setDamping(0.1,0.1);
-		mesh.castShadow = true;
-
-		avatarCam.position.set(0,4,0);
-		avatarCam.lookAt(0,4,10);
-		mesh.add(avatarCam);
-		avatarCam.add(listener1);
-
-
-
-		return mesh;
+		
+		// Constructs the OBJ Loader
+		var loader = new THREE.JSONLoader();
+		loader.load(
+		
+		// File Location
+		"/models/suzanne.json", 
+			
+			// Function called upon load
+			function (geometry, materials){
+				
+				var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+				var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+				monkey = new Physijs.BoxMesh( geometry, pmaterial );
+				
+				monkey.setDamping(0.1,0.1);
+				monkey.castShadow = true;
+				
+				// Sets the avatar to the mesh
+				avatar = monkey;
+				avatar.translateY(20);
+				avatar.add(avatarCam);
+				console.log("done");
+			}
+		);
 	}
 
 
@@ -412,8 +423,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
       case "h": controls.reset = true; break;
 
 			case "p": scene = initScene(); createMainScene(); break;
-
-
+			
 			// switch cameras
 			case "1": gameState.camera = camera; break;
 			case "2": gameState.camera = avatarCam; break;
@@ -443,8 +453,8 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			case "r": controls.up    = false; break;
 			case "f": controls.down  = false; break;
 			case "m": controls.speed = 10; break;
-      case " ": controls.fly = false; break;
-      case "h": controls.reset = false; break;
+		  case " ": controls.fly = false; break;
+		  case "h": controls.reset = false; break;
 
 			//rotate avatar camera
 			case "q": controls.leftCamera = false; break;
