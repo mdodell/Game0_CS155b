@@ -6,7 +6,6 @@ The user moves a cube around the board trying to knock balls into a cone
 
 */
 
-
 	// First we declare the variables that hold the objects we need
 	// in the animation code
 	var scene, renderer;  // all threejs programs need these
@@ -21,11 +20,10 @@ The user moves a cube around the board trying to knock balls into a cone
 
 
 	// create an AudioListener and add it to the camera
-var listener1 = new THREE.AudioListener();
+    var listener1 = new THREE.AudioListener();
 
-// create the PositionalAudio object (passing in the listener)
-var sound1 = new THREE.PositionalAudio( listener1 );
-
+	// create the PositionalAudio object (passing in the listener)
+	var sound1 = new THREE.PositionalAudio( listener1 );
 
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false,
@@ -35,7 +33,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 	var gameState =
 	     {score:0, health:10, scene:'main', camera:'none' }
 
-  var startDate = new Date();
+    var startDate = new Date();
 	var elapsedTime;
 
 
@@ -101,8 +99,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			camera.position.set(0,50,0);
 			camera.lookAt(0,0,0);
 
-
-
 			// create the ground and the skybox
 			var ground = createGround('grass.png');
 			scene.add(ground);
@@ -110,15 +106,12 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			scene.add(skybox);
 
 			// create the avatar
-			createAvatar();
 			avatarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			avatarCam.position.set(0,4,0);
-			avatarCam.lookAt(0,4,10);
-			avatarCam.add(listener1);
-			avatarCam.translateY(-4);
+			createAvatar();
+			
+			avatarCam.translateY(4);
 			avatarCam.translateZ(3);
 			
-			scene.add(avatar);
 			gameState.camera = avatarCam;
 
 			addBalls();
@@ -145,9 +138,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 	function randN(n){
 		return Math.random()*n;
 	}
-
-
-
 
 	function addBalls(){
 		var numBalls = 2
@@ -177,8 +167,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		}
 	}
 
-
-
 	function playGameMusic(){
 		// create an AudioListener and add it to the camera
 		var listener = new THREE.AudioListener();
@@ -196,7 +184,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			sound.play();
 		});
 	}
-
 
 	function soundEffect(file){
 		// create an AudioListener and add it to the camera
@@ -216,18 +203,19 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		});
 	}
 
-	/* We don't do much here, but we could do more!
-	*/
+	/* We don't do much here, but we could do more!*/
 	function initScene(){
 		//scene = new THREE.Scene();
     var scene = new Physijs.Scene();
 		return scene;
 	}
 
-  function initPhysijs(){
-    Physijs.scripts.worker = '/js/physijs_worker.js';
-    Physijs.scripts.ammo = '/js/ammo.js';
-  }
+	function initPhysijs(){
+	
+		Physijs.scripts.worker = '/js/physijs_worker.js';
+		Physijs.scripts.ammo = '/js/ammo.js';
+	}
+	
 	/*
 		The renderer needs a size and the actual canvas we draw on
 		needs to be added to the body of the webpage. We also specify
@@ -264,6 +252,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		mesh.castShadow = true;
 		return mesh;
 	}
+	
 	function createImageMesh(image){
 		var geometry = new THREE.BoxGeometry( 1, 1, 1);
 		var texture = new THREE.TextureLoader().load( '../images/'+image );
@@ -276,7 +265,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		mesh.castShadow = true;
 		return mesh;
 	}
-
 
 	function createGround(image){
 		// creating a textured plane which receives shadows
@@ -297,8 +285,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		// we need to rotate the mesh 90 degrees to make it horizontal not vertical
 	}
 
-
-
 	function createSkyBox(image,k){
 		// creating a textured plane which receives shadows
 		var geometry = new THREE.SphereGeometry( 80, 80, 80 );
@@ -313,11 +299,8 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 
 		mesh.receiveShadow = false;
 
-
-		return mesh
 		// we need to rotate the mesh 90 degrees to make it horizontal not vertical
-
-
+		return mesh
 	}
 
 	function createAvatar(){
@@ -341,17 +324,16 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 				
 				// Sets the avatar to the mesh
 				avatar = monkey;
-				avatar.translateY(20);
 				avatar.add(avatarCam);
+				avatar.translateY(20);
+				scene.add(avatar);
 				console.log("done");
 			}
 		);
 	}
 
 
-
-
-// finally add the sound to the mesh
+	// finally add the sound to the mesh
 	function createConeMesh(r,h){
 		var geometry = new THREE.ConeGeometry( r, h, 32);
 		var texture = new THREE.TextureLoader().load( '../images/tile.jpg' );
@@ -366,10 +348,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		return mesh;
 	}
 
-
-
-
-
 	function createBall(){
 		//var geometry = new THREE.SphereGeometry( 4, 20, 20);
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
@@ -380,10 +358,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		mesh.castShadow = true;
 		return mesh;
 	}
-
-
-
-
 
 	var clock;
 
@@ -453,17 +427,14 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			case "r": controls.up    = false; break;
 			case "f": controls.down  = false; break;
 			case "m": controls.speed = 10; break;
-		  case " ": controls.fly = false; break;
-		  case "h": controls.reset = false; break;
+		    case " ": controls.fly = false; break;
+		    case "h": controls.reset = false; break;
 
 			//rotate avatar camera
 			case "q": controls.leftCamera = false; break;
 			case "e": controls.rightCamera = false;break;
 		}
 	}
-
-
-
 
   function updateAvatar(){
 		"change the avatar's linear or angular velocity based on controls state (set by WSAD key presses)"
@@ -472,17 +443,19 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 
 		if (controls.fwd){
 			avatar.setLinearVelocity(forward.multiplyScalar(controls.speed));
-		} else if (controls.bwd){
+		} 
+		else if (controls.bwd){
 			avatar.setLinearVelocity(forward.multiplyScalar(-controls.speed));
-		} else {
+		} 
+		else {
 			var velocity = avatar.getLinearVelocity();
 			velocity.x=velocity.z=0;
 			avatar.setLinearVelocity(velocity); //stop the xz motion
 		}
 
-    if (controls.fly){
-      avatar.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
-    }
+		if (controls.fly){
+		  avatar.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
+		}
 
 		if (controls.left){
 			avatar.setAngularVelocity(new THREE.Vector3(0,controls.speed*0.1,0));
@@ -490,20 +463,17 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			avatar.setAngularVelocity(new THREE.Vector3(0,-controls.speed*0.1,0));
 		}
 
-    if (controls.reset){
-      avatar.__dirtyPosition = true;
-      avatar.position.set(40,10,40);
-    }
+		if (controls.reset){
+		  avatar.__dirtyPosition = true;
+		  avatar.position.set(40,10,40);
+		}
 
 		if (controls.leftCamera){
 			avatarCam.rotateY(0.01);
 		} else if(controls.rightCamera){
 			avatarCam.rotateY(-0.01);
 		}
-
 	}
-
-
 
 	function animate() {
 
@@ -535,7 +505,5 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 
 			default:
 			  console.log("don't know the scene "+gameState.scene);
-
 		}
-
 	}
