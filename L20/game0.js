@@ -130,7 +130,7 @@ The user moves a cube around the board trying to knock balls into a cone
 			gameState.camera = avatarCam;
 
 			edgeCam = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			
+
 
 			addBalls();
 
@@ -356,6 +356,8 @@ The user moves a cube around the board trying to knock balls into a cone
 						if (other_object==npc){
 							console.log("npc "+i+" hit the avatar");
 							gameState.health -= 1;  // add one to the score
+							avatar.position.set(randN(20)+15,avatar.position.y,randN(20)+15);
+							avatar.__dirtyPosition = true;
 							if (gameState.health<1) {
 								gameState.scene='youlose';
 							}
@@ -555,7 +557,7 @@ The user moves a cube around the board trying to knock balls into a cone
 				}
 				var info = document.getElementById("info");
 				elapsedTime = (new Date().getTime() - startDate.getTime()) / 1000;
-			 	info.innerHTML='<div style="font-size:24pt">Score: ' + gameState.score + '&nbsp;&nbsp;Time Taken: ' + parseInt(elapsedTime) + ' seconds&nbsp;&nbsp;&lt;/&gt; with &hearts; by Team 10</div>';
+			 	info.innerHTML='<div style="font-size:24pt">Score: ' + gameState.score + '&nbsp;&nbsp;Health: ' + gameState.health + '&nbsp;&nbsp;Time Taken: ' + parseInt(elapsedTime) + ' seconds&nbsp;&nbsp;&lt;/&gt; with &hearts; by Team 10</div>';
 				break;
 
 				case "youlose":
