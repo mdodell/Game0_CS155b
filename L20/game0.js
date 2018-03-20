@@ -131,6 +131,12 @@ The user moves a cube around the board trying to knock balls into a cone
 
 			addBalls();
 
+			npc = createBoxMesh(0x0000ff);
+			npc.position.set(30,5,-30);
+			npc.scale.set(1,2,4);
+			scene.add(npc);
+			console.dir(npc);
+
 			cone = createConeMesh(4,6);
 			cone.position.set(10,3,7);
 			scene.add(cone);
@@ -513,6 +519,12 @@ The user moves a cube around the board trying to knock balls into a cone
 		}
 	}
 
+	function updateNPC(){
+			npc.lookAt(avatar.position);
+		  npc.__dirtyPosition = true;
+			npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(0.5));
+	}
+
 	function animate() {
 
 		requestAnimationFrame( animate );
@@ -531,6 +543,7 @@ The user moves a cube around the board trying to knock balls into a cone
 
 			case "main":
 				updateAvatar();
+				updateNPC();
 	    	scene.simulate();
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
