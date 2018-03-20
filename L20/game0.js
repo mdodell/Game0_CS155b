@@ -352,6 +352,8 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 		var mesh = new Physijs.ConeMesh( geometry, pmaterial, 0 );
 		mesh.add( sound1 ); //adds Jaws music to cone as you get closer
 		mesh.castShadow = true;
+		this.__dirtyPosition = true;
+		this.__dirtyRotation = true;
 		return mesh;
 	}
 
@@ -455,6 +457,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 
 
 
+
   function updateAvatar(){
 		"change the avatar's linear or angular velocity based on controls state (set by WSAD key presses)"
 
@@ -494,10 +497,19 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 	}
 
 
+function updateEnemy() {
+	//var forward = cone.getWorldDirection();
+	//cone.setLinearVelocity(new THREE.Vector3(0,0,10));
+	cone.lookAt(avatar.position);
+	cone.translateZ(.1);
+}
+
 
 	function animate() {
 
 		requestAnimationFrame( animate );
+
+
 
 		switch(gameState.scene) {
 
@@ -513,6 +525,7 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 
 			case "main":
 				updateAvatar();
+				updateEnemy();
 	    	scene.simulate();
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
@@ -527,5 +540,6 @@ var sound1 = new THREE.PositionalAudio( listener1 );
 			  console.log("don't know the scene "+gameState.scene);
 
 		}
+
 
 	}
