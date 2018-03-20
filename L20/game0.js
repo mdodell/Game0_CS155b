@@ -76,7 +76,7 @@ The user moves a cube around the board trying to knock balls into a cone
 	function createLoseScene(){
 		loseScene = initScene();
 		loseText = createSkyBox('youlose.png',10);
-		
+
 		loseScene.add(loseText);
 		var light1 = createPointLight();
 		light1.position.set(0,200,20);
@@ -125,6 +125,7 @@ The user moves a cube around the board trying to knock balls into a cone
 
 			avatarCam.translateY(4);
 			avatarCam.translateZ(3);
+			avatarCam.rotation.y = Math.PI;
 
 			gameState.camera = avatarCam;
 
