@@ -134,11 +134,9 @@ The user moves a cube around the board trying to knock balls into a cone
 
 			addBalls();
 
-			npc = createBoxMesh(0x0000ff);
+			npc = createBoxMesh(0x0000ff,1,2,4);
 			npc.position.set(30,5,-30);
-			npc.scale.set(1,2,4);
 			scene.add(npc);
-			console.dir(npc);
 
 			cone = createConeMesh(4,6);
 			cone.position.set(10,3,7);
@@ -270,6 +268,14 @@ The user moves a cube around the board trying to knock balls into a cone
 
 	function createBoxMesh(color){
 		var geometry = new THREE.BoxGeometry( 1, 1, 1);
+		var material = new THREE.MeshLambertMaterial( { color: color} );
+		mesh = new Physijs.BoxMesh( geometry, material );
+    //mesh = new Physijs.BoxMesh( geometry, material,0 );
+		mesh.castShadow = true;
+		return mesh;
+	}
+	function createBoxMesh(color,a,b,c){
+		var geometry = new THREE.BoxGeometry( a, b, c);
 		var material = new THREE.MeshLambertMaterial( { color: color} );
 		mesh = new Physijs.BoxMesh( geometry, material );
     //mesh = new Physijs.BoxMesh( geometry, material,0 );
@@ -437,15 +443,15 @@ The user moves a cube around the board trying to knock balls into a cone
 			case "s": controls.bwd = true; break;
 			case "a": controls.left = true; break;
 			case "d": controls.right = true; break;
-			
+
 			case "W": controls.speed = 20; controls.fwd = true;  break;
 			case "S": controls.speed = 20; controls.bwd = true; break;
 			case "A": controls.speed = 20; controls.left = true; break;
 			case "D": controls.speed = 20; controls.right = true; break;
-			
+
 			case "i": avatar.visible = false;  break;
 			case "I": avatar.visible = true;  break;
-			
+
 			case "r": controls.up = true; break;
 			case "f": controls.down = true; break;
 			case "m": controls.speed = 30; break;
@@ -454,6 +460,8 @@ The user moves a cube around the board trying to knock balls into a cone
 			case "~": gameState.scene = 'youlose'; break;
 
 			case "p": scene = initScene(); createMainScene(); break;
+
+			case "y": soundEffect("victory_fanfare.mp3");
 
 			// switch cameras
 			case "1": gameState.camera = camera; break;
@@ -482,12 +490,12 @@ The user moves a cube around the board trying to knock balls into a cone
 			case "s": controls.bwd   = false; controls.speed = 10; break;
 			case "a": controls.left  = false; controls.speed = 10; break;
 			case "d": controls.right = false; controls.speed = 10; break;
-			
+
 			case "W": controls.fwd   = false; controls.speed = 10; break;
 			case "S": controls.bwd   = false; controls.speed = 10; break;
 			case "A": controls.left  = false; controls.speed = 10; break;
 			case "D": controls.right = false; controls.speed = 10; break;
-			
+
 			case "r": controls.up    = false; break;
 			case "f": controls.down  = false; break;
 			case "m": controls.speed = 10; break;
