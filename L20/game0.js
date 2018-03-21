@@ -1,9 +1,8 @@
 
 /*
-Game 0
-This is a ThreeJS program which implements a simple game
-The user moves a cube around the board trying to knock balls into a cone
-
+PA02 - Game 0 Revisions
+By Team 10
+Professor Hickey
 */
 
 	// First we declare the variables that hold the objects we need
@@ -362,8 +361,8 @@ The user moves a cube around the board trying to knock balls into a cone
 						if (other_object==npc){
 							console.log("npc "+i+" hit the avatar");
 							gameState.health -= 1;  // add one to the score
-							avatar.position.set(randN(20)+15,avatar.position.y,randN(20)+15);
-							avatar.__dirtyPosition = true;
+							npc.position.set(randN(20)+15,avatar.position.y,randN(20)+15);
+							npc.__dirtyPosition = true;
 							if (gameState.health<1) {
 								gameState.scene='youlose';
 							}
