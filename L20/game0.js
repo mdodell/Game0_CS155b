@@ -437,6 +437,12 @@ The user moves a cube around the board trying to knock balls into a cone
 			case "s": controls.bwd = true; break;
 			case "a": controls.left = true; break;
 			case "d": controls.right = true; break;
+			
+			case "W": controls.speed = 20; controls.fwd = true;  break;
+			case "S": controls.speed = 20; controls.bwd = true; break;
+			case "A": controls.speed = 20; controls.left = true; break;
+			case "D": controls.speed = 20; controls.right = true; break;
+			
 			case "r": controls.up = true; break;
 			case "f": controls.down = true; break;
 			case "m": controls.speed = 30; break;
@@ -469,10 +475,16 @@ The user moves a cube around the board trying to knock balls into a cone
 		//console.log("Keydown:"+event.key);
 		//console.dir(event);
 		switch (event.key){
-			case "w": controls.fwd   = false;  break;
-			case "s": controls.bwd   = false; break;
-			case "a": controls.left  = false; break;
-			case "d": controls.right = false; break;
+			case "w": controls.fwd   = false; controls.speed = 10; break;
+			case "s": controls.bwd   = false; controls.speed = 10; break;
+			case "a": controls.left  = false; controls.speed = 10; break;
+			case "d": controls.right = false; controls.speed = 10; break;
+			
+			case "W": controls.fwd   = false; controls.speed = 10; break;
+			case "S": controls.bwd   = false; controls.speed = 10; break;
+			case "A": controls.left  = false; controls.speed = 10; break;
+			case "D": controls.right = false; controls.speed = 10; break;
+			
 			case "r": controls.up    = false; break;
 			case "f": controls.down  = false; break;
 			case "m": controls.speed = 10; break;
