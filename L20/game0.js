@@ -443,11 +443,14 @@ The user moves a cube around the board trying to knock balls into a cone
 			case "A": controls.speed = 20; controls.left = true; break;
 			case "D": controls.speed = 20; controls.right = true; break;
 			
+			case "i": avatar.visible = false;  break;
+			case "I": avatar.visible = true;  break;
+			
 			case "r": controls.up = true; break;
 			case "f": controls.down = true; break;
 			case "m": controls.speed = 30; break;
-      case " ": controls.fly = true; break;
-      case "h": controls.reset = true; break;
+			case " ": controls.fly = true; break;
+			case "h": controls.reset = true; break;
 			case "~": gameState.scene = 'youlose'; break;
 
 			case "p": scene = initScene(); createMainScene(); break;
