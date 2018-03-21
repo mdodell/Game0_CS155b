@@ -27,7 +27,7 @@ Professor Hickey
 
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false,
-				speed:10, fly:false, reset:false, leftCamera:false, rightCamera: false,
+				speed:10, fly:false, reset:false, leftCamera:false, rightCamera: false, flipPlayer: false,
 		    camera:camera}
 
 	var gameState =
@@ -477,6 +477,9 @@ Professor Hickey
 			case "ArrowUp": avatarCam.translateZ(-1);break;
 			case "ArrowDown": avatarCam.translateZ(1);break;
 
+			case "u": controls.flipPlayer = true; break;
+
+
 		}
 
 	}
@@ -505,6 +508,8 @@ Professor Hickey
 			//rotate avatar camera
 			case "q": controls.leftCamera = false; break;
 			case "e": controls.rightCamera = false;break;
+
+			case "u": controls.flipPlayer = false; break;
 		}
 	}
 
@@ -545,12 +550,20 @@ Professor Hickey
 		} else if(controls.rightCamera){
 			avatarCam.rotateY(-0.01);
 		}
+		if (controls.flipPlayer){
+			avatar.__dirtyRotation = true;
+			avatar.rotateX(Math.PI/2);
+		}
 	}
 
 	function updateNPC(){
+
 			npc.lookAt(avatar.position);
 		  npc.__dirtyPosition = true;
-			npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(0.5));
+			npc.__dirtyRotation = true;
+			if (npc.position.distanceTo(avatar.position) < 25) {
+				npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(3));
+			}
 	}
 
 	function animate() {
